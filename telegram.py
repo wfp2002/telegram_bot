@@ -4,8 +4,11 @@ targetAlta = 60.0
 targetBaixa = 40.0
 
 def sendMessage(botMessage):
-    botToken = '1759413148:AAGZJRnU5qxu2ZPyOc17bs9sRyNYX6TYm3I'
-    botChatID = '177744171'
+    botToken = '234987234:JKmhjkMNHyxu2ZPyOc17bs9sYUjmnhGSWr'
+    #Para pegar o botToken, e na hora da criacao do bot entrar no @botFather e dar um /New, assim que informar os nomes solicitados sera gerado pelo @botFather
+    botChatID = '475745179' 
+    #Para pegar o botChatID acessar o endereco abaixo e ver o message_id->from->id: Algo como "475745179" 
+    #https://api.telegram.org/bot234987234:JKmhjkMNHyxu2ZPyOc17bs9sYUjmnhGSWr/getUPdates
     sendText = 'https://api.telegram.org/bot' + botToken + '/sendMessage?chat_id=' + botChatID + '&text=' + botMessage 
 
     response = requests.get(sendText)
