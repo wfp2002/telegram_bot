@@ -5,7 +5,7 @@ from time import sleep
 from threading import Thread, Lock
 
 global config
-config = {'url': 'https://api.telegram.org/bot1785291467:AAFo6L_CpajZW_lLbCYaOcjxUWbIeKnM8-8/', 'lock': Lock()}
+config = {'url': 'https://api.telegram.org/bot12876218736:jdshfkshfd_ASJjhsdCYaOcjxUWbIeKnM8-8/', 'lock': Lock()}
 
 def del_update(data):
     global config
