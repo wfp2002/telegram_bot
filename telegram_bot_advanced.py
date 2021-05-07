@@ -1,47 +1,44 @@
-import json
-import requests
-from time import sleep
-from threading import Thread, Lock
+import requests, re, time
 
-global config
-config = {'url': 'https://api.telegram.org/bot182736492:lkdsjflsiureLKJLSK_lLbCYaOcjxUWbIeKnM8-8/', 'lock': Lock()}
+targetAlta = 65.0
+targetBaixa = 60.0
 
-def del_update(data):
-    global config
+print('Target Alta: $ ' + str(targetAlta))
+print('Target Baixa: $ ' + str(targetBaixa))
 
-    config['lock'].acquire()
-    requests.post(config['url'] + 'getUpdates', {'offset': data['update_id']+1})
-    config['lock'].release()
+def sendMessage(botMessage):
+    botToken = '1759413148:AAGZJRnU5qxu2ZPyOc17bs9sRyNYX6TYm3I'
+    botChatID = '177744171'
+    sendText = 'https://api.telegram.org/bot' + botToken + '/sendMessage?chat_id=' + botChatID + '&text=' + botMessage 
 
-
-def send_message(data, msg):
-    global config
-
-    config['lock'].acquire()
-    requests.post(config['url'] + 'sendMessage', {'chat_id': data['message']['chat']['id'], 'text': str(msg)})
-    config['lock'].release()
-
-
-
+    response = requests.get(sendText)
+    return response.json()
 
 while True:
-    x=''
-    while 'result' not in x:
-        try:
-            x = json.loads(requests.get(config['url'] + 'getUpdates').text)
-        except Exception as e:
-            x=''
-            if 'Failed to estabilish a new connection' in str(e):
-                print('Perda de conexao')
-            else:
-                print('Erro desconhecido: ' + str(e))
+    try:
+        treeweb = requests.get("https://bscscan.com/token/0xf0fcd737fce18f95621cc7841ebe0ea6efccf77e")
+        seedweb = requests.get("https://bscscan.com/token/0x40B34cC972908060D6d527276e17c105d224559d")
+        p = re.compile("[$][0-9]{1,4}\.[0-9]{1,4}")
+        result1 = p.search(treeweb.text)
+        result2 = p.search(seedweb.text)
 
-    if len(x['result']) > 0:
-        for data in x['result']:
-            Thread(target=del_update, args=(data, )).start()
+        tree = str(result1.group(0).replace('$',''))
+        seed = str(result2.group(0).replace('$',''))
 
-            print(json.dumps(data, indent=1))
-            if data['message']['text'] == 'oi':
-                Thread(target=send_message, args=(data, 'oi pra vc tbem!')).start()
+        result = tree + "," + seed
+        print(result)
 
-        sleep(1.5)
+        print('Target Alta: $ ' + str(targetAlta))
+        print('Target Baixa: $ ' + str(targetBaixa))
+
+        if (float(seed) > targetAlta):
+            print('Maior que $ ' + str(targetAlta))
+            sendMessage('SEED em Alta: $' + str(seed))
+        elif (float(seed) < targetBaixa):
+            print('Menor que $ ' + str(targetBaixa))
+            sendMessage('SEED em Baixa: $' + str(seed))
+
+        time.sleep(300)
+
+    except Exception:
+        pass
